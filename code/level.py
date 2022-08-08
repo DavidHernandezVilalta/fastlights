@@ -28,11 +28,22 @@ class Level:
                 x = col_index * TILESIZE
                 y = row_index * TILESIZE
                 if col == 1:
-                    Light (1, (x,y),[self.visible_sprites,self.obstacle_sprites])
+                    Light (1, 64, (x,y),[self.visible_sprites,self.obstacle_sprites])
                 if col == 0:
-                    Light (0, (x,y),[self.visible_sprites,self.obstacle_sprites])
+                    Light (0, 64, (x,y),[self.visible_sprites,self.obstacle_sprites])
+        print(self.obstacle_sprites.sprites()[0].size)
+
+    def input(self):
+        click = pygame.mouse.get_pressed()[0]
+        if click:
+            mousex = pygame.mouse.get_pos()[0]
+            mousey = pygame.mouse.get_pos()[1]
+            row = mousex // 64;
+            col = mousey // 64;
+            print(self.obstacle_sprites.sprites()[col*MAX_COLS+row].state)
 
     def run(self):
 		# update and draw the game
+        self.input()
         self.visible_sprites.draw(self.display_surface)
         self.visible_sprites.update()
