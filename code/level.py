@@ -13,9 +13,17 @@ class Level:
 		# sprite group setup
         self.visible_sprites = pygame.sprite.Group()
         self.obstacle_sprites = pygame.sprite.Group()
-
+        
 		# sprite setup
         self.create_map()
+
+        #attributes
+        self.counter = 10
+        self.text = '10'.rjust(3)
+        self.lights_clicked = 0
+        self.font = pygame.font.SysFont('Consolas', 30)
+        pygame.time.set_timer(pygame.USEREVENT, 1000)
+
 
     def create_map(self):
         for i in range(10):
@@ -30,17 +38,28 @@ class Level:
                 if col == 1:
                     Light (1, 64, (x,y),[self.visible_sprites,self.obstacle_sprites])
                 if col == 0:
-                    Light (0, 64, (x,y),[self.visible_sprites,self.obstacle_sprites])
+                    Light (-1, 64, (x,y),[self.visible_sprites,self.obstacle_sprites])
         print(self.obstacle_sprites.sprites()[0].size)
 
     def input(self):
         click = pygame.mouse.get_pressed()[0]
-        if click:
+        if click:  
             mousex = pygame.mouse.get_pos()[0]
             mousey = pygame.mouse.get_pos()[1]
             row = mousex // 64;
             col = mousey // 64;
-            print(self.obstacle_sprites.sprites()[col*MAX_COLS+row].state)
+            if self.obstacle_sprites.sprites()[col*MAX_COLS+row].state == 1:
+                self.obstacle_sprites.sprites()[col*MAX_COLS+row].state = -1
+                self.lights_clicked += 1
+                print(self.lights_clicked)
+        if self.lights_clicked == 10 and self.counter > 0:
+            self.text = 'Well done'
+        elif self.counter <= 10 and self.counter > 0:
+            self.text = str(self.counter)
+        else:
+            self.text = 'Game Over'
+
+            
 
     def run(self):
 		# update and draw the game
